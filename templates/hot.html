@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="d-flex gap-3 align-items-center">
+        <h2>Burning Issues</h2>
+        <a href="{% url 'index' %}">New Questions</a>
+    </div>
+
+        <div class="col-9">
+          {% for question in questions %}
+          
+            {% include 'layouts/question.html' %}
+
+          {% endfor %}
+
+
+         
+          {% include 'layouts/pagination.html' %}
+
+
+        </div>
+{% endblock %}       
+        

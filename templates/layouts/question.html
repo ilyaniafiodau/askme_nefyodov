@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="d-flex flex-column gap-3">
+    <div class="card mt-3 w-100" style="width: 18rem;">
+      <div class="card-body">
+        
+        <div class="row">
+          <div class="col-3">
+            <div class="borders mb-3">
+              <img src="{% static 'img/thisisfine.png' %}" alt="avatar" class="img-thumbnail" width="150" >
+            </div>
+              
+            <input class="form-control" type="number" value="5" placeholder="Default input" aria-label="default input example">
+          </div>
+          <div class="col-9">
+                <h5 class="card-title">
+                  <a href="{% url 'single_question' question.id %}">{{ question.title }}</a>
+                </h5>
+            <p class="card-text"> 
+              {{ question.text }}
+            </p>
+            
+            <div class="d-flex gap-5">
+              <a href="#" class="card-link">Answers(3)</a>
+              <div class="d-flex gap-2">
+                Tags:
+                  <a href="#" class="card-link">Popular Tag</a>
+                  <a href="#" class="card-link">Less Popular Tag</a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
