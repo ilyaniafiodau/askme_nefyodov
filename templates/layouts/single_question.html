@@ -1,0 +1,29 @@
+{% load static %}
+<div class="card w-100" style="width: 18rem;">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                <div class="border mb-2 d-flex">
+                  <img src="{% static '/img/not_okay.png' %}" alt="question pic" class="img-fluid">
+            
+                </div>
+                <input class="form-control" type="number" value="5" placeholder="default input"
+                       aria-label="default input example">
+            </div>
+            <div class="col-9">
+                <h5 class="card-title"><a href="{% url 'question' question.id %}">{{question.title}}</a></h5>
+                <p class="card-text">{{question.text}}</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="card-link">Answers (3)</a>
+                    <div> Tags:
+                        {% for tag in question_tags %}
+                            {% include 'layouts/single_tag.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

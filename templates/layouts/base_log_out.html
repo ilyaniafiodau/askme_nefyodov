@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block profile %}
+    <div class="d-flex align-items-center">
+        <a href="{% url 'login' %}">Log In</a>
+        <a href="{% url 'signup' %}" style="margin-left: 10px">Sign Up</a>
+    </div>
+{% endblock %}

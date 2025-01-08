@@ -1,0 +1,15 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block profile %}
+<a class="btn btn-outline-success" href="{% url 'ask' %}" type="submit">Ask!</a>
+
+<div class="d-flex gap-1">
+  <img src="{% static 'img/kopatych.jpg' %}" alt="profile pic" class="img-thumbnail" width="50">
+  <div>
+    <div>Disco Dancer</div>
+    <a href="{% url 'settings' %}">Settings</a>
+    <a href="{% url 'login' %}">Log Out</a>
+  </div>
+</div>
+{% endblock %}
