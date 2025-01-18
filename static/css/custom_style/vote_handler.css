@@ -1,0 +1,38 @@
+.vote-handler {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;     
+}
+.voter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.vote-handler button {
+
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+
+    background-color: lightgrey;
+    color: black;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+
+    --bs-btn-padding-x: 0;
+    --bs-btn-padding-y: 0;
+}
+.vote-handler button:hover {
+    background-color: #208454;
+}
+.vote-count {
+    border: 2px solid #208454; 
+    border-radius: 10px; 
+    width: 200px;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+

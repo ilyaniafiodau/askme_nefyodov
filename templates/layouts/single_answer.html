@@ -1,0 +1,32 @@
+{% load static %}
+
+<link href="{% static 'css/custom_style/votes' %}" rel="stylesheet">
+
+<div class="card w-100 mt-3" style="width: 18rem;">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                <div class="border mb-2 d-flex" style="flex-direction: column">
+                    <img src="{{ answer.user.profile_image.url }}" alt="answer pic" class="img-fluid">
+                    <h6 class="card-subtitletext-body-secondary">{{ answer.user.user.username }}</h6>
+                </div>
+                {% include 'layouts/answer_votes.html' with votes_count=answer.votes_count %}
+            </div>
+            <div class="col-9">
+                <h5 class="card-title">{{ answer.title }}</h5>
+                <p class="card-text">{{ answer.body }}</p>
+                {% if answer.is_accepted  %}
+                    <input class="form-check-input" type="checkbox" value="" id="check1" checked>
+                    <label class="form-check-label" for="check1">
+                        Correct!
+                    </label>
+                {% else %}
+                    <input class="form-check-input" type="checkbox" value="" id="check1" unchecked>
+                    <label class="form-check-label" for="check1">
+                        Upvote
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

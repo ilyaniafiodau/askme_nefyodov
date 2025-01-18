@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/custom_style/answer_vote_handler.css' %}">
+
+
+<div class="answer-vote-handler">
+  <div class="answer-vote-count">
+    {{ votes_count }}
+  </div>
+  <div class="answer-voter">
+    <button type="button" class="btn" id="increment">+</button>
+    <button type="button" class="btn" id="decrement">-</button>
+  </div>
+</div>
+

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Website</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/custom_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom_style/magnifying_glass.css' %}">
   </head>
 
   <body>
@@ -41,17 +41,17 @@
       {% endblock %}
 
       <div class="row">
-         {% block content %}
-         {% endblock %}
+        {% block content %}
+        {% endblock %}
   
         <div class="col">
           <section class="mb-4">
-            <h2>Popular Tags</h2>
-            <div>
-              {% for tag in pop_tags %}
-                    {% include 'layouts/single_tag.html' %}
-              {% endfor %}
-            </div>
+              <h2>Popular Tags</h2>
+              <div>
+                {% for tag in pop_tags %}
+                      {% include 'layouts/single_tag.html' %}
+                {% endfor %}
+              </div>
           </section>
           <section>
             <h2>Top Members</h2>

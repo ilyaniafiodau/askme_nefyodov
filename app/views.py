@@ -3,35 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template import loader
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from . import models
 
-# Create your views here.
-
-pop_tags = ["Why", "How", "sigh", "duh", "WTF", "OK", "idk"]
-question_tags = ["WTF", "idk"]
-
-top_members = ["Mr Why", "Mr Who", "Mr When", "Dr Know-It-All", "Armchair Sportsman"]
-
-questions = []
-for i in range(0,30):
-  questions.append({
-    'title': 'Question #'  + str(i),
-    'id': i,
-    'text': 'Some lorem ipsum kinda text to provide content for what-is-supposed-to-be a complicated question ' + str(i)
-  })
-
-  hot_questions = copy.deepcopy(questions)
-  hot_questions.reverse()
-
-answers = []
-for i in range(0,2):
-  answers.append({
-    'title': 'Answer #'  + str(i),
-    'id': i,
-    'text': 'Some lorem ipsum kinda text to provide content for answer ' + str(i)
-  })
-
-
-  from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def paginate(objects_list, request, per_page = 4):
     page_number = request.GET.get('page', 1)  
@@ -49,75 +23,106 @@ def paginate(objects_list, request, per_page = 4):
     
 
 def index(request):
+    questions = models.Question.objects.annotate(
+        votes_count=models.Sum('votes__vote_type'),
+    ).order_by('-created_at')
+
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
     page, page_number = paginate(questions, request, per_page = 4)
     if (page is None):
         return redirect(f"/?page={page_number}")
 
     return render(
         request,
-        template_name="index.html",
+        "index.html",
         context={
             'page_obj': page,
             'questions': page.object_list,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
             'pop_tags': pop_tags,
             'top_users': top_members
         }
     )
 
 def hot(request):
+    hot_questions = models.Question.objects.get_hot_questions()
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
     page, page_number = paginate(hot_questions, request, per_page = 4)
     if (page is None):
         return redirect(f"/?page={page_number}")
 
     return render(
         request,
-        template_name="hot.html",
+        "hot.html",
         context={
             'page_obj': page,
             'questions': page.object_list,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
             'pop_tags': pop_tags,
             'top_users': top_members
         }
     )
 
 def question(request, question_id):
-    if (question_id < 0) or (question_id >= len(questions)):
-        return render(
-                        request, 
-                        'question_not_found.html',
-                        status=404,
-                        context={
-                            'pop_tags': pop_tags,
-                            'top_users': top_members
-                        }
-                    )
+    if (question_id <= 0) or (question_id >= models.Question.objects.count()):
+        return page_404(request)
+
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
+    answers = models.Answer.objects.get_answers_by_question_id(question_id)
+    page, page_number = paginate(answers, request, per_page=3)
+    
+    if (page is None):
+        return redirect(f"/?page={page_number}")  
     
     return render(
         request,
-        template_name="question.html",
+        "question.html",
         context={
-            'question': questions[question_id],
-            'pop_tags':pop_tags,
-            'question_tags': question_tags,
+            'question': models.Question.objects.get_question_by_id(question_id),
+            'page_obj': page,
+            'answers': page.object_list,
+            'pop_tags': pop_tags,
             'top_users': top_members,
-            'answers': answers
+            #'question_tags': question_tags
         }
     )
 
+def page_404(request):
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
+    return render(
+            request,
+            'page_404.html',
+            status=404,
+            context={
+                'pop_tags': pop_tags,
+                'top_users': top_members
+            }
+        )
+
 def tag(request, tag_name):
+    questions = models.Question.objects.get_questions_by_tag_name(tag_name)
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
     page, page_number = paginate(questions, request, per_page=4)
     if (page is None):
         return redirect(f"/?page={page_number}")
 
     return render(
         request,
-        template_name="tag.html",
+        "tag.html",
         context={
             'page_obj': page,
             'questions': page.object_list,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
             'tag_name': tag_name,
             'pop_tags': pop_tags,
             'top_users': top_members
@@ -125,32 +130,44 @@ def tag(request, tag_name):
     )
 
 def signup(request):
-   return render(
-      request, 'signup.html',
-      context={
-            'pop_tags': pop_tags,
-            'top_users': top_members,
-            'question_tags': question_tags,
-        }
-      )
+    pop_tags = models.Tag.objects.get_popular_n_tags()
+    top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
+    return render(
+        request, 
+        'signup.html',
+        context={
+                'pop_tags': pop_tags,
+                'top_users': top_members,
+                #'question_tags': question_tags,
+            }
+        )
 
 def ask(request):
+   pop_tags = models.Tag.objects.get_popular_n_tags()
+   top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+   
    return render(
-      request, 'ask.html',
+      request, 
+      'ask.html',
       context={
             'pop_tags': pop_tags,
             'top_users': top_members,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
         }
       )
 
 def settings(request):
+   pop_tags = models.Tag.objects.get_popular_n_tags()
+   top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
    return render(
-      request, 'settings.html',
+      request, 
+      'settings.html',
       context={
             'pop_tags': pop_tags,
             'top_users': top_members,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
         }
       )
 
@@ -159,12 +176,16 @@ def login(request):
       #username = request.POST.get('username')
      # password = request.POST.get('password')
       #confirm = request.POST.get('confirm')
+      pop_tags = models.Tag.objects.get_popular_n_tags()
+      top_members = models.Profile.objects.get_top_n_users_by_number_of_answers(5)
+
       return render(
-          request, 'login.html',
+          request, 
+          'login.html',
           context={
             'pop_tags': pop_tags,
             'top_users': top_members,
-            'question_tags': question_tags,
+            #'question_tags': question_tags,
             }
           )
 

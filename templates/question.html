@@ -4,22 +4,22 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="col-9">
     <div class="card mb-3 w-100" style="border: 0;">
         <div class="row g-0">
             <div class="col-4">
                 <div class="border mb-2 d-flex">
-                    <img src="{% static '/img/not_okay.png' %}" class="img-fluid rounded-start" alt="question pic">
+                    <img src="{{ question.user.profile_image.url }}" class="img-fluid rounded-start" alt="question pic">
                 </div>
-                <input class="form-control" type="number" value="5" placeholder="default input"
-                       aria-label="default input example">
+                {% include 'layouts/votes.html' with votes_count=question.votes_count %} 
             </div>
             <div class="col">
                 <div class="card-body">
                     <h5 class="card-title">{{ question.title }}</h5>
-                    <p class="card-text">{{ question.text }}</p>
+                    <p class="card-text">{{ question.body }}</p>
                     <p class="card-text"> Tags:
-                        {% for tag in question_tags %}
+                        {% for tag in question.tags.all %}
                             {% include 'layouts/single_tag.html' %}
                         {% endfor %}</p>
                 </div>
@@ -31,32 +31,11 @@
         <hr class="my-0">
     </div>
 
-{% for answer in answers %}
-    <div class="card w-100 mt-3" style="width: 18rem;">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    <div class="border mb-2 d-flex">
-                        <img src="/static/img/thisisfine.png" alt="answer pic" class="img-fluid">
-                    </div>
-                    <input class="form-control" type="number" value="5" placeholder="default input"
-                           aria-label="default input example">
-                </div>
-                <div class="col-9">
-                    <h5 class="card-title">{{ answer.title }}</h5>
-                    <p class="card-text">{{ answer.text }}</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check1" checked>
-                        <label class="form-check-label" for="check1">
-                            Correct!
-                        </label>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    {% for answer in answers %}
+        {% include 'layouts/single_answer.html' %}
     {% endfor %}
+   
 
     <div class="bg-dark w-100 mt-3 mb-3">
         <hr class="my-0">
@@ -68,5 +47,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary mb-5">Answer</button>
+
 </div>
 {% endblock %}

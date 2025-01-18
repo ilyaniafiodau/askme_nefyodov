@@ -1,0 +1,37 @@
+.answer-vote-handler {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;     
+}
+.answer-voter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.answer-vote-handler button {
+
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+
+    background-color: lightgrey;
+    color: black;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+
+    --bs-btn-padding-x: 0;
+    --bs-btn-padding-y: 0;
+}
+.answer-vote-handler button:hover {
+    background-color: #106cfc;
+}
+.answer-vote-count {
+    border: 2px solid #106cfc; 
+    border-radius: 10px; 
+    width: 150px;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

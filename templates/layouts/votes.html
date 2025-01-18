@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/custom_style/vote_handler.css' %}">
+
+<div class="vote-handler">
+  <div class="vote-count">
+    {{ votes_count }}
+  </div>
+  <div class="voter">
+    <button type="button" class="btn" id="increment">+</button>
+    <button type="button" class="btn" id="decrement">-</button>
+  </div>
+</div>
+
+
